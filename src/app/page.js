@@ -3,7 +3,7 @@
 import React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { Typography, Alert, Container, Box, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Chip, Badge } from '@mui/material';
+import { Typography, Alert, Container, Box, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Chip, Badge, RadioGroup, FormControlLabel, Radio, Card } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import StyleIcon from '@mui/icons-material/Style';
@@ -16,14 +16,53 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Toast } from '@/components/Toast';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 
+const EXPORT_FORMATS = [
+  {
+    id: 'tsv',
+    name: 'TSV',
+    description: 'Tab-separated values for Anki, Quizlet, and most flashcard apps',
+    extension: '.tsv',
+    icon: '📋',
+  },
+  {
+    id: 'csv',
+    name: 'CSV',
+    description: 'Comma-separated values for Excel and Google Sheets',
+    extension: '.csv',
+    icon: '📊',
+  },
+  {
+    id: 'json',
+    name: 'JSON',
+    description: 'JavaScript Object Notation for developers and custom apps',
+    extension: '.json',
+    icon: '⚙️',
+  },
+  {
+    id: 'anki',
+    name: 'Anki',
+    description: 'Optimized format for AnkiDroid and Anki desktop',
+    extension: '.json',
+    icon: '🧠',
+  },
+  {
+    id: 'quizlet',
+    name: 'Quizlet',
+    description: 'Optimized format for Quizlet import',
+    extension: '.json',
+    icon: '✏️',
+  },
+];
+
 export default function Home() {
   const { images, setImages, text, translatedText, isLoading, error, setError } = useImageUpload();
-  const { rows, addFlashcard, updateFlashcard, exportToTSV, clearFlashcards } = useFlashcardCollection();
+  const { rows, addFlashcard, updateFlashcard, exportToTSV, exportToCSV, exportToJSON, exportToAnki, exportToQuizlet, clearFlashcards } = useFlashcardCollection();
   const { toastState, closeToast, showSuccess, showError, showWarning } = useToast();
 
   const [localError, setLocalError] = React.useState(null);
   const [exportDialogOpen, setExportDialogOpen] = React.useState(false);
   const [exportFilename, setExportFilename] = React.useState('my_data');
+  const [selectedFormat, setSelectedFormat] = React.useState('tsv');
   const [confirmClearOpen, setConfirmClearOpen] = React.useState(false);
 
   const handleAddFlashcards = () => {
@@ -49,10 +88,22 @@ export default function Home() {
   const handleExportConfirm = () => {
     try {
       const filename = exportFilename.trim() || 'my_data';
-      exportToTSV(`${filename}.tsv`);
+      const format = EXPORT_FORMATS.find((f) => f.id === selectedFormat);
+      const fullFilename = `${filename}${format.extension}`;
+
+      const exportFunctions = {
+        tsv: exportToTSV,
+        csv: exportToCSV,
+        json: exportToJSON,
+        anki: exportToAnki,
+        quizlet: exportToQuizlet,
+      };
+
+      exportFunctions[selectedFormat](fullFilename);
       setLocalError(null);
       setExportDialogOpen(false);
       setExportFilename('my_data');
+      setSelectedFormat('tsv');
       showSuccess('Flashcards exported successfully!');
     } catch (err) {
       setLocalError(err.message);
@@ -203,7 +254,7 @@ export default function Home() {
                   disabled={rows.length === 0}
                   size="large"
                 >
-                  Export TSV
+                  Export
                 </Button>
                 <Button
                   sx={{ width: { xs: '100%', sm: 200 } }}
@@ -221,30 +272,71 @@ export default function Home() {
           </Stack>
         </Stack>
 
-        {/* Export Filename Dialog */}
-        <Dialog open={exportDialogOpen} onClose={handleExportCancel}>
+        {/* Export Dialog with Format Options */}
+        <Dialog open={exportDialogOpen} onClose={handleExportCancel} maxWidth="sm" fullWidth>
           <DialogTitle>Export Flashcards</DialogTitle>
-          <DialogContent sx={{ minWidth: '400px' }}>
-            <Typography variant="body2" sx={{ mb: 2 }}>
-              Enter a filename for your flashcard export:
-            </Typography>
-            <TextField
-              autoFocus
-              fullWidth
-              label="Filename"
-              value={exportFilename}
-              onChange={(e) => setExportFilename(e.target.value)}
-              variant="outlined"
-              placeholder="my_data"
-              helperText="The .tsv extension will be added automatically"
-            />
+          <DialogContent sx={{ pt: 3 }}>
+            {/* Filename Input */}
+            <Stack gap={3}>
+              <TextField
+                autoFocus
+                fullWidth
+                label="Filename"
+                value={exportFilename}
+                onChange={(e) => setExportFilename(e.target.value)}
+                variant="outlined"
+                placeholder="my_data"
+                helperText={`File will be saved as: ${exportFilename}${EXPORT_FORMATS.find(f => f.id === selectedFormat)?.extension}`}
+              />
+
+              {/* Format Selection */}
+              <Stack gap={1}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                  Select Export Format
+                </Typography>
+                <RadioGroup value={selectedFormat} onChange={(e) => setSelectedFormat(e.target.value)}>
+                  <Stack gap={1}>
+                    {EXPORT_FORMATS.map((format) => (
+                      <Card
+                        key={format.id}
+                        sx={{
+                          p: 1.5,
+                          cursor: 'pointer',
+                          border: selectedFormat === format.id ? 2 : 1,
+                          borderColor: selectedFormat === format.id ? 'primary.main' : 'divider',
+                          transition: 'all 0.2s',
+                          '&:hover': {
+                            borderColor: 'primary.main',
+                            backgroundColor: 'action.hover',
+                          },
+                        }}
+                        onClick={() => setSelectedFormat(format.id)}
+                      >
+                        <FormControlLabel
+                          value={format.id}
+                          control={<Radio />}
+                          label={
+                            <Stack gap={0.5} sx={{ ml: 1 }}>
+                              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                                {format.icon} {format.name}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary">
+                                {format.description}
+                              </Typography>
+                            </Stack>
+                          }
+                          sx={{ width: '100%', m: 0 }}
+                        />
+                      </Card>
+                    ))}
+                  </Stack>
+                </RadioGroup>
+              </Stack>
+            </Stack>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleExportCancel}>Cancel</Button>
-            <Button
-              onClick={handleExportConfirm}
-              variant="contained"
-            >
+            <Button onClick={handleExportConfirm} variant="contained" color="primary">
               Export
             </Button>
           </DialogActions>
