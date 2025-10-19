@@ -7,6 +7,8 @@ import { Typography, Alert, Container, Box, TextField, Dialog, DialogTitle, Dial
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import StyleIcon from '@mui/icons-material/Style';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import UploadImage from './UploadImage';
 import CurrentStack from './CurrentStack';
 import { useImageUpload } from '@/hooks/useImageUpload';
@@ -121,16 +123,42 @@ export default function Home() {
   return (
     <ErrorBoundary>
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Stack gap={3}>
-          {/* Header */}
-          <Stack alignItems={'center'} textAlign={'center'}>
-            <Typography variant="h4" marginTop={1} gutterBottom>
-              Flashcard Generator
-            </Typography>
-            <Typography variant="body1" color="textSecondary">
-              Upload an image to translate and make into a flashcard.
-            </Typography>
-          </Stack>
+        <Stack gap={4}>
+          {/* Enhanced Header */}
+          <Box
+            sx={{
+              background: 'linear-gradient(135deg, #f0f7ff 0%, #faf7fc 100%)',
+              borderRadius: 3,
+              p: 4,
+              textAlign: 'center',
+              boxShadow: '0 4px 12px rgba(61, 111, 163, 0.08)',
+              border: '1px solid rgba(61, 111, 163, 0.1)',
+            }}
+          >
+            <Stack alignItems={'center'} gap={2}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 2,
+                }}
+              >
+                <StyleIcon
+                  sx={{
+                    fontSize: 40,
+                    color: 'primary.main',
+                  }}
+                />
+                <Typography variant="h4" sx={{ letterSpacing: '0.5px' }}>
+                  Flashcard Generator
+                </Typography>
+              </Box>
+              <Typography variant="body1" color="textSecondary" sx={{ maxWidth: 500 }}>
+                Upload an image to extract text, translate it, and create beautiful flashcards for language learning.
+              </Typography>
+            </Stack>
+          </Box>
 
           {/* Display errors */}
           {(error || localError) && (
@@ -142,13 +170,13 @@ export default function Home() {
           {/* Main content - Responsive Grid */}
           <Stack
             className="OUTER_DIV"
-            gap={{ xs: 2, md: 4 }}
+            gap={{ xs: 3, md: 4 }}
             justifyContent={'flex-start'}
             alignItems={{ xs: 'stretch', md: 'flex-start' }}
             flexDirection={{ xs: 'column', md: 'row' }}
             sx={{ minHeight: '70vh' }}
           >
-            {/* Upload section */}
+            {/* Upload section with card styling */}
             <Box
               className="OUTER_STACK1"
               sx={{
@@ -160,8 +188,23 @@ export default function Home() {
                 flexDirection: 'column',
                 justifyContent: 'flex-start',
                 alignItems: 'center',
+                background: 'linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%)',
+                borderRadius: 3,
+                p: 3,
+                boxShadow: '0 2px 8px rgba(61, 111, 163, 0.06)',
+                border: '1px solid rgba(61, 111, 163, 0.08)',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  boxShadow: '0 4px 12px rgba(61, 111, 163, 0.1)',
+                },
               }}
             >
+              <Stack direction="row" alignItems="center" gap={1.5} mb={2.5} width="100%">
+                <CloudUploadIcon color="primary" sx={{ fontSize: 28 }} />
+                <Typography variant="h6" sx={{ letterSpacing: '0.3px' }}>
+                  Upload Image
+                </Typography>
+              </Stack>
               <UploadImage
                 images={images}
                 setImages={setImages}
@@ -172,29 +215,38 @@ export default function Home() {
               />
             </Box>
 
-            {/* Flashcard stack section */}
+            {/* Flashcard stack section with card styling */}
             <Stack
               className="OUTER_STACK2"
-              gap={2}
+              gap={2.5}
               sx={{
                 flex: { xs: 1, md: 1 },
                 maxWidth: { md: '50%' },
                 width: '100%',
                 minHeight: { xs: 'auto', md: '600px' },
+                background: 'linear-gradient(135deg, #ffffff 0%, #faf7fc 100%)',
+                borderRadius: 3,
+                p: 3,
+                boxShadow: '0 2px 8px rgba(125, 90, 138, 0.06)',
+                border: '1px solid rgba(125, 90, 138, 0.08)',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  boxShadow: '0 4px 12px rgba(125, 90, 138, 0.1)',
+                },
               }}
             >
               {/* Card count header */}
-              <Stack direction="row" alignItems="center" gap={1} justifyContent="space-between">
-                <Stack direction="row" alignItems="center" gap={1}>
-                  <StyleIcon color="primary" />
-                  <Typography variant="h6" fontWeight="bold">
+              <Stack direction="row" alignItems="center" gap={1.5} justifyContent="space-between">
+                <Stack direction="row" alignItems="center" gap={1.5}>
+                  <AutoStoriesIcon color="primary" sx={{ fontSize: 28 }} />
+                  <Typography variant="h6" sx={{ letterSpacing: '0.3px' }}>
                     Your Flashcards
                   </Typography>
                 </Stack>
                 <Chip
                   label={`${rows.length} card${rows.length !== 1 ? 's' : ''}`}
                   color="primary"
-                  sx={{ fontWeight: 'bold' }}
+                  sx={{ fontWeight: 'bold', fontSize: '0.85rem' }}
                 />
               </Stack>
 
@@ -202,30 +254,36 @@ export default function Home() {
                 sx={{
                   flex: 1,
                   overflowY: 'auto',
-                  minHeight: { xs: '300px', md: '500px' },
+                  minHeight: { xs: '300px', md: '450px' },
                   justifyContent: rows.length === 0 ? 'center' : 'flex-start',
                   alignItems: 'center',
-                  border: 1,
-                  borderColor: 'divider',
                   borderRadius: 2,
                   p: 2,
-                  bgcolor: 'background.default',
+                  bgcolor: 'rgba(255, 255, 255, 0.5)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(61, 111, 163, 0.05)',
+                  transition: 'all 0.3s ease',
                 }}
               >
                 <CurrentStack rows={rows} onUpdateFlashcard={handleUpdateFlashcard} />
               </Stack>
 
-              {/* Action buttons */}
+              {/* Action buttons with enhanced styling */}
               <Stack
                 flexDirection={{ xs: 'column', sm: 'row' }}
                 gap={2}
                 justifyContent={'center'}
                 alignItems={'center'}
-                sx={{ flexWrap: 'wrap' }}
+                sx={{ flexWrap: 'wrap', pt: 1 }}
               >
                 <Button
-                  sx={{ width: { xs: '100%', sm: 200 } }}
-                  variant="outlined"
+                  sx={{
+                    width: { xs: '100%', sm: 'auto' },
+                    minWidth: 160,
+                    background: 'linear-gradient(135deg, #3d6fa3 0%, #2a4f7f 100%)',
+                    boxShadow: '0 4px 8px rgba(61, 111, 163, 0.2)',
+                  }}
+                  variant="contained"
                   color="primary"
                   startIcon={<DownloadIcon />}
                   onClick={handleExportClick}
@@ -235,7 +293,10 @@ export default function Home() {
                   Export
                 </Button>
                 <Button
-                  sx={{ width: { xs: '100%', sm: 200 } }}
+                  sx={{
+                    width: { xs: '100%', sm: 'auto' },
+                    minWidth: 160,
+                  }}
                   variant="outlined"
                   color="secondary"
                   startIcon={<DeleteSweepIcon />}

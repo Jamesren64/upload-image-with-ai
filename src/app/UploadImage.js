@@ -18,7 +18,6 @@ export default function UploadImage({
   isLoading,
 }) {
   const onChange = (imageList) => {
-    console.log('onChange called with imageList:', imageList);
     setImages(imageList);
   };
 
@@ -46,7 +45,6 @@ export default function UploadImage({
         isDragging,
         dragProps,
       }) => {
-        console.log('ImageUploading render - imageList:', imageList, 'onImageUpload:', typeof onImageUpload);
         return (
         <Stack
           alignItems={'center'}
@@ -112,11 +110,8 @@ export default function UploadImage({
                     variant="contained"
                     startIcon={<ImageIcon />}
                     onClick={(e) => {
-                      console.log('Browse Files button clicked, event:', e);
-                      console.log('onImageUpload function:', onImageUpload);
                       e.stopPropagation();
                       onImageUpload();
-                      console.log('onImageUpload called');
                     }}
                     disabled={isLoading}
                     size="large"
@@ -256,16 +251,21 @@ export default function UploadImage({
             </Stack>
           </Stack>
 
-          {/* Action Buttons */}
+          {/* Action Buttons with enhanced styling */}
           <Stack
             flexDirection={{ xs: 'column', sm: 'row' }}
-            gap={1.5}
+            gap={2}
             width={'100%'}
-            sx={{ maxWidth: { xs: '100%', sm: '500px' } }}
+            sx={{ maxWidth: { xs: '100%', sm: '520px' }, pt: 1 }}
           >
             <Button
-              sx={{ flex: 1, minWidth: { xs: '100%', sm: '150px' } }}
-              variant="outlined"
+              sx={{
+                flex: 1,
+                minWidth: { xs: '100%', sm: '160px' },
+                background: 'linear-gradient(135deg, #3d6fa3 0%, #2a4f7f 100%)',
+                boxShadow: '0 4px 8px rgba(61, 111, 163, 0.2)',
+              }}
+              variant="contained"
               color="primary"
               startIcon={<AddCardIcon />}
               onClick={addFlashcards}
@@ -275,7 +275,10 @@ export default function UploadImage({
               Add Flashcard
             </Button>
             <Button
-              sx={{ flex: 1, minWidth: { xs: '100%', sm: '150px' } }}
+              sx={{
+                flex: 1,
+                minWidth: { xs: '100%', sm: '160px' },
+              }}
               variant="outlined"
               color="secondary"
               startIcon={<DeleteIcon />}
