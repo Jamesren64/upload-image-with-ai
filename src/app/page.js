@@ -20,43 +20,23 @@ const EXPORT_FORMATS = [
   {
     id: 'tsv',
     name: 'TSV',
-    description: 'Tab-separated values for Anki, Quizlet, and most flashcard apps',
     extension: '.tsv',
-    icon: '📋',
   },
   {
     id: 'csv',
     name: 'CSV',
-    description: 'Comma-separated values for Excel and Google Sheets',
     extension: '.csv',
-    icon: '📊',
   },
   {
     id: 'json',
     name: 'JSON',
-    description: 'JavaScript Object Notation for developers and custom apps',
     extension: '.json',
-    icon: '⚙️',
-  },
-  {
-    id: 'anki',
-    name: 'Anki',
-    description: 'Optimized format for AnkiDroid and Anki desktop',
-    extension: '.json',
-    icon: '🧠',
-  },
-  {
-    id: 'quizlet',
-    name: 'Quizlet',
-    description: 'Optimized format for Quizlet import',
-    extension: '.json',
-    icon: '✏️',
   },
 ];
 
 export default function Home() {
   const { images, setImages, text, translatedText, isLoading, error, setError } = useImageUpload();
-  const { rows, addFlashcard, updateFlashcard, exportToTSV, exportToCSV, exportToJSON, exportToAnki, exportToQuizlet, clearFlashcards } = useFlashcardCollection();
+  const { rows, addFlashcard, updateFlashcard, exportToTSV, exportToCSV, exportToJSON, clearFlashcards } = useFlashcardCollection();
   const { toastState, closeToast, showSuccess, showError, showWarning } = useToast();
 
   const [localError, setLocalError] = React.useState(null);
@@ -95,8 +75,6 @@ export default function Home() {
         tsv: exportToTSV,
         csv: exportToCSV,
         json: exportToJSON,
-        anki: exportToAnki,
-        quizlet: exportToQuizlet,
       };
 
       exportFunctions[selectedFormat](fullFilename);
@@ -273,11 +251,11 @@ export default function Home() {
         </Stack>
 
         {/* Export Dialog with Format Options */}
-        <Dialog open={exportDialogOpen} onClose={handleExportCancel} maxWidth="sm" fullWidth>
+        <Dialog open={exportDialogOpen} onClose={handleExportCancel} maxWidth="xs" fullWidth>
           <DialogTitle>Export Flashcards</DialogTitle>
-          <DialogContent sx={{ pt: 3 }}>
+          <DialogContent sx={{ pt: 2, overflow: 'visible' }}>
             {/* Filename Input */}
-            <Stack gap={3}>
+            <Stack gap={2}>
               <TextField
                 autoFocus
                 fullWidth
@@ -286,11 +264,15 @@ export default function Home() {
                 onChange={(e) => setExportFilename(e.target.value)}
                 variant="outlined"
                 placeholder="my_data"
-                helperText={`File will be saved as: ${exportFilename}${EXPORT_FORMATS.find(f => f.id === selectedFormat)?.extension}`}
+                InputLabelProps={{ shrink: true }}
               />
 
+              <Typography variant="caption" color="text.secondary" sx={{ wordBreak: 'break-word' }}>
+                File will be saved as: <strong>{exportFilename || 'my_data'}{EXPORT_FORMATS.find(f => f.id === selectedFormat)?.extension}</strong>
+              </Typography>
+
               {/* Format Selection */}
-              <Stack gap={1}>
+              <Stack gap={1.5} sx={{ mt: 1 }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
                   Select Export Format
                 </Typography>
@@ -300,7 +282,7 @@ export default function Home() {
                       <Card
                         key={format.id}
                         sx={{
-                          p: 1.5,
+                          p: 1,
                           cursor: 'pointer',
                           border: selectedFormat === format.id ? 2 : 1,
                           borderColor: selectedFormat === format.id ? 'primary.main' : 'divider',
@@ -316,14 +298,9 @@ export default function Home() {
                           value={format.id}
                           control={<Radio />}
                           label={
-                            <Stack gap={0.5} sx={{ ml: 1 }}>
-                              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                                {format.icon} {format.name}
-                              </Typography>
-                              <Typography variant="caption" color="text.secondary">
-                                {format.description}
-                              </Typography>
-                            </Stack>
+                            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                              {format.name}
+                            </Typography>
                           }
                           sx={{ width: '100%', m: 0 }}
                         />
