@@ -142,7 +142,7 @@ export default function Home() {
                   flex: 1,
                   overflowY: 'auto',
                   minHeight: { xs: '300px', md: '500px' },
-                  justifyContent: 'flex-start',
+                  justifyContent: rows.length === 0 ? 'center' : 'flex-start',
                   alignItems: 'center',
                 }}
               >

@@ -3,24 +3,28 @@ import Stack from '@mui/material/Stack';
 import { Typography, Box } from '@mui/material';
 
 export default function CurrentStack({ rows }) {
-  if (rows.length === 0) {
-    return (
-      <Stack
-        className="CURRENT_STACK"
-        gap={2}
-        alignItems="center"
-        justifyContent="center"
-        sx={{ width: '100%', height: '100%', color: 'gray' }}
-      >
-        <Typography variant="body1">No flashcards yet</Typography>
-        <Typography variant="caption">Upload an image and add flashcards to see them here</Typography>
-      </Stack>
-    );
-  }
-
   return (
-    <Stack className="CURRENT_STACK" gap={2} sx={{ width: '100%' }}>
-      {rows.map((row, index) => (
+    <Stack
+      className="CURRENT_STACK"
+      gap={2}
+      sx={{
+        width: '100%',
+        height: '100%',
+        minHeight: '100%',
+      }}
+    >
+      {rows.length === 0 ? (
+        <Stack
+          gap={2}
+          alignItems="center"
+          justifyContent="center"
+          sx={{ width: '100%', height: '100%', color: 'gray' }}
+        >
+          <Typography variant="body1">No flashcards yet</Typography>
+          <Typography variant="caption">Upload an image and add flashcards to see them here</Typography>
+        </Stack>
+      ) : (
+        rows.map((row, index) => (
         <Box key={row[0]} sx={{ width: '100%' }}>
           <Typography variant="subtitle2" sx={{ mb: 0.5, fontWeight: 'bold' }}>
             Card {index + 1}
@@ -55,7 +59,8 @@ export default function CurrentStack({ rows }) {
             <Typography variant="body2">{row[1]}</Typography>
           </Box>
         </Box>
-      ))}
+        ))
+      )}
     </Stack>
   );
 }
