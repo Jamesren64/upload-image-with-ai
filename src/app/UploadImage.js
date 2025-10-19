@@ -39,17 +39,23 @@ export default function UploadImage({
           justifyContent={'center'}
           width={'100%'}
           height={'100%'}
+          gap={2}
         >
-          <Stack className="CARDS" width={'100%'}>
+          <Stack className="CARDS" width={'100%'} gap={2}>
+            {/* Image Upload Area */}
             <Stack
               className="OUTER_STACK"
               width={'100%'}
               overflow="auto"
-              sx={{ border: 1, borderColor: 'gray', borderRadius: '8px' }}
-              height={300}
-              alignItems={'center'}
-              justifyContent={'center'}
-              position="relative"
+              sx={{
+                border: 1,
+                borderColor: 'gray',
+                borderRadius: '8px',
+                minHeight: { xs: '200px', md: '300px' },
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
+              }}
             >
               {isLoading && (
                 <Stack
@@ -60,7 +66,7 @@ export default function UploadImage({
                   bottom={0}
                   alignItems="center"
                   justifyContent="center"
-                  sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)' }}
+                  sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1 }}
                 >
                   <CircularProgress />
                 </Stack>
@@ -82,45 +88,70 @@ export default function UploadImage({
               </Stack>
 
               {imageList.map((image, index) => (
-                <Stack key={index} className="image-item" padding={2} width={'100%'}>
-                  <img src={image['data_url']} alt="" />
+                <Stack
+                  key={index}
+                  className="image-item"
+                  padding={1}
+                  width={'100%'}
+                  sx={{ maxHeight: { xs: '150px', md: '250px' }, overflow: 'auto' }}
+                >
+                  <img src={image['data_url']} alt="uploaded" style={{ maxWidth: '100%', height: 'auto' }} />
                 </Stack>
               ))}
             </Stack>
 
-            <Stack flexDirection={'row'} width={'100%'} gap={2} marginTop={2}>
-              <Stack flexDirection={'column'} width={'50%'}>
-                <Typography variant="h7">Original Text</Typography>
+            {/* Text Display Area */}
+            <Stack
+              flexDirection={{ xs: 'column', md: 'row' }}
+              width={'100%'}
+              gap={2}
+            >
+              <Stack flexDirection={'column'} flex={1} minWidth={0}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                  Original Text
+                </Typography>
                 <Stack
                   width={'100%'}
-                  height={200}
-                  padding={0.5}
-                  sx={{ border: 1, borderColor: 'gray', borderRadius: '8px' }}
-                  overflow={'scroll'}
+                  sx={{
+                    minHeight: { xs: '120px', md: '150px' },
+                    padding: 1,
+                    border: 1,
+                    borderColor: 'gray',
+                    borderRadius: '8px',
+                    overflowY: 'auto',
+                    backgroundColor: '#f5f5f5',
+                  }}
                 >
                   {text ? (
-                    <Typography>{text}</Typography>
+                    <Typography variant="body2">{text}</Typography>
                   ) : (
-                    <Typography sx={{ color: 'gray' }}>
+                    <Typography sx={{ color: 'gray' }} variant="body2">
                       Upload image to see flashcard
                     </Typography>
                   )}
                 </Stack>
               </Stack>
 
-              <Stack flexDirection={'column'} width={'50%'}>
-                <Typography variant="h7">Translated Text</Typography>
+              <Stack flexDirection={'column'} flex={1} minWidth={0}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                  Translated Text
+                </Typography>
                 <Stack
                   width={'100%'}
-                  height={200}
-                  padding={0.5}
-                  sx={{ border: 1, borderColor: 'gray', borderRadius: '8px' }}
-                  overflow={'scroll'}
+                  sx={{
+                    minHeight: { xs: '120px', md: '150px' },
+                    padding: 1,
+                    border: 1,
+                    borderColor: 'gray',
+                    borderRadius: '8px',
+                    overflowY: 'auto',
+                    backgroundColor: '#fafafa',
+                  }}
                 >
                   {translatedText ? (
-                    <Typography>{translatedText}</Typography>
+                    <Typography variant="body2">{translatedText}</Typography>
                   ) : (
-                    <Typography sx={{ color: 'gray' }}>
+                    <Typography sx={{ color: 'gray' }} variant="body2">
                       Upload image to see flashcard
                     </Typography>
                   )}
@@ -129,9 +160,15 @@ export default function UploadImage({
             </Stack>
           </Stack>
 
-          <Stack flexDirection={'row'} gap={1} marginTop={3}>
+          {/* Action Buttons */}
+          <Stack
+            flexDirection={{ xs: 'column', sm: 'row' }}
+            gap={1}
+            width={'100%'}
+            sx={{ maxWidth: { xs: '100%', sm: '450px' } }}
+          >
             <Button
-              sx={{ width: 200 }}
+              sx={{ flex: 1, minWidth: { xs: '100%', sm: '150px' } }}
               variant="contained"
               onClick={addFlashcards}
               disabled={isLoading || !text || !translatedText}
@@ -139,8 +176,8 @@ export default function UploadImage({
               Add Flashcards
             </Button>
             <Button
-              sx={{ width: 200 }}
-              variant="contained"
+              sx={{ flex: 1, minWidth: { xs: '100%', sm: '150px' } }}
+              variant="outlined"
               onClick={() => {
                 if (images.length > 0) {
                   onImageRemove(0);
