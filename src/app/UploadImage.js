@@ -18,6 +18,7 @@ export default function UploadImage({
   isLoading,
 }) {
   const onChange = (imageList) => {
+    console.log('onChange called with imageList:', imageList);
     setImages(imageList);
   };
 
@@ -44,7 +45,9 @@ export default function UploadImage({
         onImageRemove,
         isDragging,
         dragProps,
-      }) => (
+      }) => {
+        console.log('ImageUploading render - imageList:', imageList, 'onImageUpload:', typeof onImageUpload);
+        return (
         <Stack
           alignItems={'center'}
           justifyContent={'center'}
@@ -108,9 +111,16 @@ export default function UploadImage({
                   <Button
                     variant="contained"
                     startIcon={<ImageIcon />}
-                    onClick={onImageUpload}
+                    onClick={(e) => {
+                      console.log('Browse Files button clicked, event:', e);
+                      console.log('onImageUpload function:', onImageUpload);
+                      e.stopPropagation();
+                      onImageUpload();
+                      console.log('onImageUpload called');
+                    }}
                     disabled={isLoading}
                     size="large"
+                    sx={{ pointerEvents: 'auto' }}
                   >
                     Browse Files
                   </Button>
@@ -281,7 +291,8 @@ export default function UploadImage({
             </Button>
           </Stack>
         </Stack>
-      )}
+        );
+      }}
     </ImageUploading>
   );
 }
