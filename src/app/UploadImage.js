@@ -265,8 +265,8 @@ export default function UploadImage({
           >
             <Button
               sx={{ flex: 1, minWidth: { xs: '100%', sm: '150px' } }}
-              variant="contained"
-              color="success"
+              variant="outlined"
+              color="primary"
               startIcon={<AddCardIcon />}
               onClick={addFlashcards}
               disabled={isLoading || !text || !translatedText}
@@ -277,7 +277,7 @@ export default function UploadImage({
             <Button
               sx={{ flex: 1, minWidth: { xs: '100%', sm: '150px' } }}
               variant="outlined"
-              color="error"
+              color="secondary"
               startIcon={<DeleteIcon />}
               onClick={() => {
                 if (images.length > 0) {

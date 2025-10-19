@@ -34,6 +34,26 @@ export function useFlashcardCollection() {
   };
 
   /**
+   * Update a flashcard by index
+   */
+  const updateFlashcard = (index, translatedText, originalText) => {
+    if (!translatedText || !originalText) {
+      throw new Error('Both original and translated text are required');
+    }
+
+    const sanitizedRow = [
+      sanitizeText(translatedText),
+      sanitizeText(originalText),
+    ];
+
+    setRows((prevRows) => {
+      const newRows = [...prevRows];
+      newRows[index] = sanitizedRow;
+      return newRows;
+    });
+  };
+
+  /**
    * Remove a flashcard by index
    */
   const removeFlashcard = (index) => {
@@ -80,6 +100,7 @@ export function useFlashcardCollection() {
     rows,
     setRows,
     addFlashcard,
+    updateFlashcard,
     removeFlashcard,
     exportToTSV,
     clearFlashcards,

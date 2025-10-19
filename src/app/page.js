@@ -18,7 +18,7 @@ import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 export default function Home() {
   const { images, setImages, text, translatedText, isLoading, error, setError } = useImageUpload();
-  const { rows, addFlashcard, exportToTSV, clearFlashcards } = useFlashcardCollection();
+  const { rows, addFlashcard, updateFlashcard, exportToTSV, clearFlashcards } = useFlashcardCollection();
   const { toastState, closeToast, showSuccess, showError, showWarning } = useToast();
 
   const [localError, setLocalError] = React.useState(null);
@@ -77,6 +77,16 @@ export default function Home() {
 
   const handleClearCancel = () => {
     setConfirmClearOpen(false);
+  };
+
+  const handleUpdateFlashcard = (index, translatedText, originalText) => {
+    try {
+      updateFlashcard(index, translatedText, originalText);
+      showSuccess('Flashcard updated successfully!');
+    } catch (err) {
+      showError(err.message);
+      console.error('Error updating flashcard:', err);
+    }
   };
 
   return (
@@ -173,7 +183,7 @@ export default function Home() {
                   bgcolor: 'background.default',
                 }}
               >
-                <CurrentStack rows={rows} />
+                <CurrentStack rows={rows} onUpdateFlashcard={handleUpdateFlashcard} />
               </Stack>
 
               {/* Action buttons */}
@@ -186,7 +196,7 @@ export default function Home() {
               >
                 <Button
                   sx={{ width: { xs: '100%', sm: 200 } }}
-                  variant="contained"
+                  variant="outlined"
                   color="primary"
                   startIcon={<DownloadIcon />}
                   onClick={handleExportClick}
@@ -198,7 +208,7 @@ export default function Home() {
                 <Button
                   sx={{ width: { xs: '100%', sm: 200 } }}
                   variant="outlined"
-                  color="error"
+                  color="secondary"
                   startIcon={<DeleteSweepIcon />}
                   onClick={handleClearClick}
                   disabled={rows.length === 0}

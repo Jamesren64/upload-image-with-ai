@@ -1,13 +1,18 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import { Typography, Box, Chip, IconButton, Collapse, Card, CardContent } from '@mui/material';
+import { Typography, Box, Chip, IconButton, Collapse, Card, CardContent, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import FlipIcon from '@mui/icons-material/Flip';
+import EditIcon from '@mui/icons-material/Edit';
 
-function FlashcardItem({ row, index }) {
+function FlashcardItem({ row, index, onUpdate }) {
   const [isFlipped, setIsFlipped] = React.useState(false);
   const [isExpanded, setIsExpanded] = React.useState(false);
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false);
+  const [editedTranslated, setEditedTranslated] = React.useState(row[0]);
+  const [editedOriginal, setEditedOriginal] = React.useState(row[1]);
+  const [editError, setEditError] = React.useState('');
 
   const MAX_PREVIEW_LENGTH = 200;
   const frontText = row[0];
@@ -16,6 +21,31 @@ function FlashcardItem({ row, index }) {
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
+  };
+
+  const handleEditClick = () => {
+    setEditedTranslated(row[0]);
+    setEditedOriginal(row[1]);
+    setEditError('');
+    setEditDialogOpen(true);
+  };
+
+  const handleEditSave = () => {
+    if (!editedTranslated.trim() || !editedOriginal.trim()) {
+      setEditError('Both fields are required');
+      return;
+    }
+    try {
+      onUpdate(index, editedTranslated, editedOriginal);
+      setEditDialogOpen(false);
+    } catch (err) {
+      setEditError(err.message);
+    }
+  };
+
+  const handleEditCancel = () => {
+    setEditDialogOpen(false);
+    setEditError('');
   };
 
   return (
@@ -39,9 +69,14 @@ function FlashcardItem({ row, index }) {
             size="small"
             sx={{ fontWeight: 'bold' }}
           />
-          <IconButton size="small" onClick={handleFlip} color="primary">
-            <FlipIcon />
-          </IconButton>
+          <Stack direction="row" gap={0.5}>
+            <IconButton size="small" onClick={handleEditClick} color="primary">
+              <EditIcon />
+            </IconButton>
+            <IconButton size="small" onClick={handleFlip} color="primary">
+              <FlipIcon />
+            </IconButton>
+          </Stack>
         </Stack>
 
         <Box
@@ -128,12 +163,52 @@ function FlashcardItem({ row, index }) {
             </IconButton>
           </Stack>
         )}
+
+        {/* Edit Dialog */}
+        <Dialog open={editDialogOpen} onClose={handleEditCancel} maxWidth="sm" fullWidth>
+          <DialogTitle>Edit Flashcard</DialogTitle>
+          <DialogContent sx={{ overflow: 'visible', pt: 2, pb: 3 }}>
+            {editError && (
+              <Typography color="error" variant="body2" sx={{ mb: 2 }}>
+                {editError}
+              </Typography>
+            )}
+            <Stack gap={3} sx={{ mt: 1 }}>
+              <TextField
+                fullWidth
+                label="Translated Text"
+                multiline
+                rows={4}
+                value={editedTranslated}
+                onChange={(e) => setEditedTranslated(e.target.value)}
+                variant="outlined"
+                InputLabelProps={{ shrink: true }}
+              />
+              <TextField
+                fullWidth
+                label="Original Text"
+                multiline
+                rows={4}
+                value={editedOriginal}
+                onChange={(e) => setEditedOriginal(e.target.value)}
+                variant="outlined"
+                InputLabelProps={{ shrink: true }}
+              />
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleEditCancel}>Cancel</Button>
+            <Button onClick={handleEditSave} variant="contained" color="primary">
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
       </CardContent>
     </Card>
   );
 }
 
-export default function CurrentStack({ rows }) {
+export default function CurrentStack({ rows, onUpdateFlashcard }) {
   return (
     <Stack
       className="CURRENT_STACK"
@@ -159,7 +234,9 @@ export default function CurrentStack({ rows }) {
           </Typography>
         </Stack>
       ) : (
-        rows.map((row, index) => <FlashcardItem key={index} row={row} index={index} />)
+        rows.map((row, index) => (
+          <FlashcardItem key={index} row={row} index={index} onUpdate={onUpdateFlashcard} />
+        ))
       )}
     </Stack>
   );

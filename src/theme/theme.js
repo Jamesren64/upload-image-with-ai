@@ -1,15 +1,15 @@
 import { createTheme } from '@mui/material/styles';
 
-// Custom theme with softer, more professional colors
+// Custom theme with softer color theme
 export const theme = createTheme({
   palette: {
     primary: {
-      main: '#5b8ec6', // Softer blue
-      light: '#e3f2fd', // Very light blue
+      main: '#3d6fa3', // Darker blue
+      light: '#e3f2fd', // Very light blue for backgrounds
       contrastText: '#1e3a5f', // Dark blue for text
     },
     secondary: {
-      main: '#9c7cb8', // Softer purple
+      main: '#7d5a8a', // Darker purple
       light: '#f3e5f5', // Very light purple
       contrastText: '#4a2c5f', // Dark purple for text
     },
