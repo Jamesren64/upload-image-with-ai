@@ -39,6 +39,11 @@ export function useImageUpload() {
       };
 
       uploadImage();
+    } else {
+      // Clear text when no images are selected
+      setText(undefined);
+      setTranslatedText(undefined);
+      setError(null);
     }
   }, [images]);
 
