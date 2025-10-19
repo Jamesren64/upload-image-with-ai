@@ -3,7 +3,10 @@
 import React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { Typography, Alert, Container, Box, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Typography, Alert, Container, Box, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Chip, Badge } from '@mui/material';
+import DownloadIcon from '@mui/icons-material/Download';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import StyleIcon from '@mui/icons-material/Style';
 import UploadImage from './UploadImage';
 import CurrentStack from './CurrentStack';
 import { useImageUpload } from '@/hooks/useImageUpload';
@@ -137,6 +140,21 @@ export default function Home() {
                 minHeight: { xs: 'auto', md: '600px' },
               }}
             >
+              {/* Card count header */}
+              <Stack direction="row" alignItems="center" gap={1} justifyContent="space-between">
+                <Stack direction="row" alignItems="center" gap={1}>
+                  <StyleIcon color="primary" />
+                  <Typography variant="h6" fontWeight="bold">
+                    Your Flashcards
+                  </Typography>
+                </Stack>
+                <Chip
+                  label={`${rows.length} card${rows.length !== 1 ? 's' : ''}`}
+                  color="primary"
+                  sx={{ fontWeight: 'bold' }}
+                />
+              </Stack>
+
               <Stack
                 sx={{
                   flex: 1,
@@ -144,6 +162,11 @@ export default function Home() {
                   minHeight: { xs: '300px', md: '500px' },
                   justifyContent: rows.length === 0 ? 'center' : 'flex-start',
                   alignItems: 'center',
+                  border: 1,
+                  borderColor: 'divider',
+                  borderRadius: 2,
+                  p: 2,
+                  bgcolor: 'background.default',
                 }}
               >
                 <CurrentStack rows={rows} />
@@ -160,17 +183,22 @@ export default function Home() {
                 <Button
                   sx={{ width: { xs: '100%', sm: 200 } }}
                   variant="contained"
+                  color="primary"
+                  startIcon={<DownloadIcon />}
                   onClick={handleExportClick}
                   disabled={rows.length === 0}
+                  size="large"
                 >
-                  Export To CSV
+                  Export TSV
                 </Button>
                 <Button
                   sx={{ width: { xs: '100%', sm: 200 } }}
                   variant="outlined"
                   color="error"
+                  startIcon={<DeleteSweepIcon />}
                   onClick={handleClearClick}
                   disabled={rows.length === 0}
+                  size="large"
                 >
                   Clear All
                 </Button>
