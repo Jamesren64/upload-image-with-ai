@@ -107,7 +107,8 @@ export default function UploadImage({
                     Drag and drop an image here, or click to browse
                   </Typography>
                   <Button
-                    variant="contained"
+                    variant="outlined"
+                    color="primary"
                     startIcon={<ImageIcon />}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -251,21 +252,16 @@ export default function UploadImage({
             </Stack>
           </Stack>
 
-          {/* Action Buttons with enhanced styling */}
+          {/* Action Buttons */}
           <Stack
             flexDirection={{ xs: 'column', sm: 'row' }}
-            gap={2}
+            gap={1.5}
             width={'100%'}
-            sx={{ maxWidth: { xs: '100%', sm: '520px' }, pt: 1 }}
+            sx={{ maxWidth: { xs: '100%', sm: '500px' } }}
           >
             <Button
-              sx={{
-                flex: 1,
-                minWidth: { xs: '100%', sm: '160px' },
-                background: 'linear-gradient(135deg, #3d6fa3 0%, #2a4f7f 100%)',
-                boxShadow: '0 4px 8px rgba(61, 111, 163, 0.2)',
-              }}
-              variant="contained"
+              sx={{ flex: 1, minWidth: { xs: '100%', sm: '150px' } }}
+              variant="outlined"
               color="primary"
               startIcon={<AddCardIcon />}
               onClick={addFlashcards}
@@ -275,10 +271,7 @@ export default function UploadImage({
               Add Flashcard
             </Button>
             <Button
-              sx={{
-                flex: 1,
-                minWidth: { xs: '100%', sm: '160px' },
-              }}
+              sx={{ flex: 1, minWidth: { xs: '100%', sm: '150px' } }}
               variant="outlined"
               color="secondary"
               startIcon={<DeleteIcon />}

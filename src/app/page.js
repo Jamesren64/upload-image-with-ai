@@ -268,7 +268,7 @@ export default function Home() {
                 <CurrentStack rows={rows} onUpdateFlashcard={handleUpdateFlashcard} />
               </Stack>
 
-              {/* Action buttons with enhanced styling */}
+              {/* Action buttons */}
               <Stack
                 flexDirection={{ xs: 'column', sm: 'row' }}
                 gap={2}
@@ -277,13 +277,8 @@ export default function Home() {
                 sx={{ flexWrap: 'wrap', pt: 1 }}
               >
                 <Button
-                  sx={{
-                    width: { xs: '100%', sm: 'auto' },
-                    minWidth: 160,
-                    background: 'linear-gradient(135deg, #3d6fa3 0%, #2a4f7f 100%)',
-                    boxShadow: '0 4px 8px rgba(61, 111, 163, 0.2)',
-                  }}
-                  variant="contained"
+                  sx={{ width: { xs: '100%', sm: 200 } }}
+                  variant="outlined"
                   color="primary"
                   startIcon={<DownloadIcon />}
                   onClick={handleExportClick}
@@ -293,10 +288,7 @@ export default function Home() {
                   Export
                 </Button>
                 <Button
-                  sx={{
-                    width: { xs: '100%', sm: 'auto' },
-                    minWidth: 160,
-                  }}
+                  sx={{ width: { xs: '100%', sm: 200 } }}
                   variant="outlined"
                   color="secondary"
                   startIcon={<DeleteSweepIcon />}
