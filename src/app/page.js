@@ -104,8 +104,8 @@ export default function Home() {
           <Stack
             className="OUTER_DIV"
             gap={{ xs: 2, md: 4 }}
-            justifyContent={'center'}
-            alignItems={{ xs: 'stretch', md: 'center' }}
+            justifyContent={'flex-start'}
+            alignItems={{ xs: 'stretch', md: 'flex-start' }}
             flexDirection={{ xs: 'column', md: 'row' }}
             sx={{ minHeight: '70vh' }}
           >
@@ -113,11 +113,13 @@ export default function Home() {
             <Box
               className="OUTER_STACK1"
               sx={{
-                flex: { xs: 1, md: '0 0 50%' },
+                flex: { xs: 1, md: 1 },
+                maxWidth: { md: '50%' },
+                width: '100%',
                 minHeight: { xs: 'auto', md: '600px' },
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center',
+                justifyContent: 'flex-start',
                 alignItems: 'center',
               }}
             >
@@ -136,7 +138,9 @@ export default function Home() {
               className="OUTER_STACK2"
               gap={2}
               sx={{
-                flex: { xs: 1, md: '0 0 50%' },
+                flex: { xs: 1, md: 1 },
+                maxWidth: { md: '50%' },
+                width: '100%',
                 minHeight: { xs: 'auto', md: '600px' },
               }}
             >

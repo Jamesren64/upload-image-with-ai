@@ -175,6 +175,7 @@ export default function UploadImage({
                 <Box
                   sx={{
                     minHeight: { xs: '120px', md: '150px' },
+                    maxHeight: { xs: '200px', md: '250px' },
                     padding: 2,
                     border: 1,
                     borderColor: 'secondary.main',
@@ -217,6 +218,7 @@ export default function UploadImage({
                 <Box
                   sx={{
                     minHeight: { xs: '120px', md: '150px' },
+                    maxHeight: { xs: '200px', md: '250px' },
                     padding: 2,
                     border: 1,
                     borderColor: 'primary.main',
