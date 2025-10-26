@@ -53,11 +53,11 @@ export default function ApiKeyModal() {
       <DialogContent sx={{ pt: 2 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Alert severity="info">
-            This app uses OpenAI's API to extract and translate text from images. You need to provide your own API key.
+            This app uses OpenAI&apos;s API to extract and translate text from images. You need to provide your own API key.
           </Alert>
 
           <Typography variant="body2" color="text.secondary">
-            Don't have an API key?{' '}
+            Don&apos;t have an API key?{' '}
             <Link
               href="https://platform.openai.com/api-keys"
               target="_blank"
@@ -86,7 +86,7 @@ export default function ApiKeyModal() {
           />
 
           <Typography variant="caption" color="text.secondary">
-            Your API key is stored locally in your browser and is never sent to our servers. It's only used to communicate directly with OpenAI's API.
+            Your API key is stored locally in your browser and is never sent to our servers. It&apos;s only used to communicate directly with OpenAI&apos;s API.
           </Typography>
         </Box>
       </DialogContent>
