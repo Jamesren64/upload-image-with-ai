@@ -29,5 +29,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./out
-          repository: Jamesren64/upload-image-ai
-          branch: gh-pages
+          external_repository: Jamesren64/upload-image-ai
+          publish_branch: gh-pages
