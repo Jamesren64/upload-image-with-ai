@@ -7,7 +7,9 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AddCardIcon from '@mui/icons-material/AddCard';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ImageIcon from '@mui/icons-material/Image';
-import { API_CONFIG } from '@/config/api';
+
+// Max images allowed per session
+const MAX_IMAGES = 69;
 
 export default function UploadImage({
   images,
@@ -33,7 +35,7 @@ export default function UploadImage({
       multiple
       value={images}
       onChange={onChange}
-      maxNumber={API_CONFIG.MAX_IMAGES}
+      maxNumber={MAX_IMAGES}
       dataURLKey="data_url"
     >
       {({

@@ -27,9 +27,9 @@ npm run lint
 ### Core Components
 
 - **src/app/page.js**: Main application component that orchestrates the flashcard creation workflow
-  - Manages image upload state and API calls to the translation service
-  - Handles flashcard collection and TSV export functionality
-  - Uses Heroku-hosted translation API: `james-image-translation-d10e77b3ae74.herokuapp.com`
+  - Manages image upload state and OpenAI API calls
+  - Handles flashcard collection and TSV/CSV/JSON export functionality
+  - Uses OpenAI Responses API for OCR and translation
 
 - **src/app/UploadImage.js**: Image upload component using `react-images-uploading`
   - Provides drag-and-drop image upload interface
@@ -40,20 +40,31 @@ npm run lint
   - Shows preview of all created flashcard pairs
   - Provides visual feedback for the flashcard stack
 
+- **src/services/openai.js**: OpenAI integration service
+  - Handles image-to-base64 conversion
+  - Performs OCR and translation in a single API call using GPT-5-mini
+  - Auto-detects source language and translates to English
+  - Returns structured JSON with original and translated text
+
+- **src/hooks/useImageUpload.js**: Custom React hook
+  - Manages image upload state and processing
+  - Handles OpenAI API communication
+  - Returns extracted and translated text
+
 ### Technology Stack
 
 - **Frontend**: Next.js 14 with React 18
 - **UI Library**: Material-UI (MUI) for components and styling
 - **Image Upload**: react-images-uploading library
-- **HTTP Client**: Axios for API communication
+- **AI/Vision**: OpenAI SDK with Responses API and GPT-5-mini model
 - **Deployment**: Static export to GitHub Pages
 
 ### Key Features
 
 1. **Image Processing**: Users upload images containing text
-2. **OCR & Translation**: External API extracts text and provides translation
+2. **OCR & Translation**: OpenAI's vision API extracts text, auto-detects language, and translates to English
 3. **Flashcard Creation**: Users can add extracted text pairs to a flashcard collection
-4. **Export**: Download flashcard collection as TSV file for import into flashcard apps
+4. **Export**: Download flashcard collection in multiple formats (TSV, CSV, JSON, Anki, Quizlet)
 
 ## Configuration
 
@@ -70,12 +81,27 @@ npm run lint
 
 ## External Dependencies
 
-- **Translation API**: The app depends on a Heroku-hosted service for OCR and translation
+- **OpenAI API**: Uses OpenAI's Responses API with GPT-5-mini for vision capabilities (OCR and translation)
+  - Both OCR and translation occur in a single API call for efficiency
+  - Requires `NEXT_PUBLIC_OPENAI_API_KEY` environment variable
+  - Get API key from https://platform.openai.com/api-keys
+  - Exposed to client-side code (NEXT_PUBLIC_ prefix) for browser-based processing
 - **GitHub Pages**: Deployment target with automatic CI/CD via GitHub Actions
 
 ## Development Notes
 
 - The app uses client-side rendering (`'use client'` directive in page.js)
-- Images are processed by uploading to external API, not stored locally
-- Flashcard data is managed in React state and exported as TSV files
+- Images are converted to base64 and processed by OpenAI's vision API, not stored locally
+- OCR and translation happen entirely on the client-side using OpenAI's API
+- Flashcard data is managed in React state and exported as multiple file formats
 - The basePath configuration means the app runs at `/upload-image` when deployed
+
+## Environment Setup
+
+To run this application locally:
+
+1. Create a `.env.local` file based on `.env.example`
+2. Add your OpenAI API key: `NEXT_PUBLIC_OPENAI_API_KEY=sk-...`
+3. Run `npm install` to install dependencies
+4. Run `npm run dev` to start the development server
+5. Visit `http://localhost:3000/upload-image` in your browser

@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { getUploadUrl } from '@/config/api';
+import { processImageWithOCRAndTranslation } from '@/services/openai';
 
 /**
  * Custom hook for handling image uploads and text extraction
- * Manages the API communication for uploading images and getting translated text
+ * Uses OpenAI's vision API for OCR and translation
  */
 export function useImageUpload() {
   const [images, setImages] = useState([]);
@@ -15,30 +14,26 @@ export function useImageUpload() {
 
   useEffect(() => {
     if (images.length > 0) {
-      const uploadImage = async () => {
+      const processImage = async () => {
         try {
           setIsLoading(true);
           setError(null);
 
-          const formData = new FormData();
-          formData.append('file', images[0].file);
-
-          const response = await axios.post(getUploadUrl(), formData);
-          setText(response.data.text);
-          setTranslatedText(response.data.translatedText);
+          // Process the first uploaded image with OpenAI
+          const result = await processImageWithOCRAndTranslation(images[0].file);
+          setText(result.text);
+          setTranslatedText(result.translatedText);
         } catch (err) {
           const errorMessage =
-            err.response?.data?.message ||
-            err.message ||
-            'Failed to process image. Please try again.';
+            err.message || 'Failed to process image. Please try again.';
           setError(errorMessage);
-          console.error('Image upload error:', err);
+          console.error('Image processing error:', err);
         } finally {
           setIsLoading(false);
         }
       };
 
-      uploadImage();
+      processImage();
     } else {
       // Clear text when no images are selected
       setText(undefined);
