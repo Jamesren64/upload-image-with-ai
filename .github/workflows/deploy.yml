@@ -1,4 +1,4 @@
-name: Deploy to upload-image-ai
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -24,10 +24,9 @@ jobs:
       - name: Build Next.js app
         run: npm run build
 
-      - name: Deploy to upload-image-ai
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./out
-          external_repository: Jamesren64/upload-image-ai
           publish_branch: gh-pages
