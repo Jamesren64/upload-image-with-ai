@@ -69,12 +69,13 @@ npm run lint
 ## Configuration
 
 ### Static Export Setup
-- **next.config.js**: Configured for static export with `/upload-image` basePath for GitHub Pages
+- **next.config.js**: Configured for static export with `/upload-image-ai` basePath for GitHub Pages
 - **package.json**: Standard Next.js scripts for development and production
 
 ### GitHub Actions
 - **publish.yml**: Automated deployment to GitHub Pages on main branch pushes
 - Uses Next.js static export to generate files in `/out` directory
+- Deploys to `upload-image-ai` repository
 
 ### Path Aliases
 - **jsconfig.json**: Configured with `@/*` alias mapping to `./src/*` for cleaner imports
@@ -94,7 +95,7 @@ npm run lint
 - Images are converted to base64 and processed by OpenAI's vision API, not stored locally
 - OCR and translation happen entirely on the client-side using OpenAI's API
 - Flashcard data is managed in React state and exported as multiple file formats
-- The basePath configuration means the app runs at `/upload-image` when deployed
+- The basePath configuration means the app runs at `/upload-image-ai` when deployed to GitHub Pages
 
 ## Environment Setup
 
