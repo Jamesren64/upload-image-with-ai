@@ -1,11 +1,6 @@
 'use client';
 import OpenAI from 'openai';
 
-const client = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true, // Required for client-side usage
-});
-
 async function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -15,8 +10,17 @@ async function fileToBase64(file) {
   });
 }
 
-export async function processImageWithOCRAndTranslation(imageFile) {
+export async function processImageWithOCRAndTranslation(imageFile, apiKey) {
   try {
+    if (!apiKey) {
+      throw new Error('API key is required. Please provide your OpenAI API key.');
+    }
+
+    const client = new OpenAI({
+      apiKey,
+      dangerouslyAllowBrowser: true, // Required for client-side usage
+    });
+
     const base64 = await fileToBase64(imageFile);
 
     const response = await client.responses.create({

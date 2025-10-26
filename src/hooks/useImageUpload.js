@@ -4,8 +4,9 @@ import { processImageWithOCRAndTranslation } from '@/services/openai';
 /**
  * Custom hook for handling image uploads and text extraction
  * Uses OpenAI's vision API for OCR and translation
+ * @param {string} apiKey - OpenAI API key
  */
-export function useImageUpload() {
+export function useImageUpload(apiKey) {
   const [images, setImages] = useState([]);
   const [text, setText] = useState(undefined);
   const [translatedText, setTranslatedText] = useState(undefined);
@@ -20,7 +21,7 @@ export function useImageUpload() {
           setError(null);
 
           // Process the first uploaded image with OpenAI
-          const result = await processImageWithOCRAndTranslation(images[0].file);
+          const result = await processImageWithOCRAndTranslation(images[0].file, apiKey);
           setText(result.text);
           setTranslatedText(result.translatedText);
         } catch (err) {
@@ -40,7 +41,7 @@ export function useImageUpload() {
       setTranslatedText(undefined);
       setError(null);
     }
-  }, [images]);
+  }, [images, apiKey]);
 
   return {
     images,

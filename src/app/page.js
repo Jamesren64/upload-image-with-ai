@@ -17,6 +17,8 @@ import { useToast } from '@/hooks/useToast';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Toast } from '@/components/Toast';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
+import { ApiKeyProvider, useApiKey } from '@/context/ApiKeyContext';
+import ApiKeyModal from '@/components/ApiKeyModal';
 
 const EXPORT_FORMATS = [
   {
@@ -36,8 +38,9 @@ const EXPORT_FORMATS = [
   },
 ];
 
-export default function Home() {
-  const { images, setImages, text, translatedText, isLoading, error, setError } = useImageUpload();
+function HomeContent() {
+  const { apiKey } = useApiKey();
+  const { images, setImages, text, translatedText, isLoading, error, setError } = useImageUpload(apiKey);
   const { rows, addFlashcard, updateFlashcard, exportToTSV, exportToCSV, exportToJSON, clearFlashcards } = useFlashcardCollection();
   const { toastState, closeToast, showSuccess, showError, showWarning } = useToast();
 
@@ -392,5 +395,14 @@ export default function Home() {
         />
       </Container>
     </ErrorBoundary>
+  );
+}
+
+export default function Home() {
+  return (
+    <ApiKeyProvider>
+      <ApiKeyModal />
+      <HomeContent />
+    </ApiKeyProvider>
   );
 }
