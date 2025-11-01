@@ -1,81 +1,45 @@
 'use client';
-import OpenAI from 'openai';
 
-async function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
+// Backend API endpoint
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
 
 export async function processImageWithOCRAndTranslation(imageFile, apiKey) {
   try {
-    if (!apiKey) {
-      throw new Error('API key is required. Please provide your OpenAI API key.');
-    }
+    // Note: apiKey parameter is kept for backwards compatibility but not used
+    // Backend handles the OpenAI API key via environment variables
 
-    const client = new OpenAI({
-      apiKey,
-      dangerouslyAllowBrowser: true, // Required for client-side usage
+    // Create FormData to send image to backend
+    const formData = new FormData();
+    formData.append('file', imageFile);
+
+    console.log('[openai] Sending image to backend:', BACKEND_URL);
+
+    // Call backend API
+    const response = await fetch(`${BACKEND_URL}/uploadfile-openai/`, {
+      method: 'POST',
+      body: formData,
     });
 
-    const base64 = await fileToBase64(imageFile);
-
-    const response = await client.responses.create({
-      model: 'gpt-5-mini',
-      input: [
-        {
-          role: 'user',
-          type: 'message',
-          content: [
-            {
-              type: 'input_text',
-              text:
-                'Please extract all text from this image and translate it to English. ' +
-                'Return the response in JSON format with two fields: "original" (the extracted text) ' +
-                'and "translated" (the English translation). Auto-detect the source language. ' +
-                'Return ONLY the JSON, nothing else.',
-            },
-            {
-              type: 'input_image',
-              image_url: `data:image/jpeg;base64,${base64}`,
-            },
-          ],
-        },
-      ],
-    });
-
-    // --- ✅ Robust output parsing ---
-    const messageBlock = response.output?.find((o) => o.type === 'message');
-    const outputText =
-      messageBlock?.content?.find((c) => c.type === 'output_text')?.text || '';
-
-    if (!outputText) {
-      console.error('Full response for debugging:', response);
-      throw new Error('No output_text found in response.');
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.detail || `Backend error: ${response.status}`);
     }
 
-    let parsed;
-    try {
-      parsed = JSON.parse(outputText);
-    } catch {
-      console.error('Could not parse JSON:', outputText);
-      throw new Error('Invalid JSON returned by model');
-    }
+    const result = await response.json();
+    console.log('[openai] Backend response:', result);
 
-    if (!parsed.original || !parsed.translated) {
-      console.error('Incomplete JSON:', parsed);
-      throw new Error('Missing expected fields (original, translated)');
+    // Backend returns { filename, text, translatedText, sourceLanguage }
+    if (!result.text || !result.translatedText) {
+      console.error('Incomplete response from backend:', result);
+      throw new Error('Backend returned incomplete data');
     }
 
     return {
-      text: parsed.original,
-      translatedText: parsed.translated,
+      text: result.text,
+      translatedText: result.translatedText,
     };
   } catch (error) {
-    console.error('Error processing image:', error);
+    console.error('Error processing image with backend:', error);
     throw error;
   }
 }

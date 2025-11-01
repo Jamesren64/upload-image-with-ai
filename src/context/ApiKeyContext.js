@@ -1,46 +1,26 @@
 'use client';
 
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useContext } from 'react';
 
 const ApiKeyContext = createContext();
 
+/**
+ * ApiKeyProvider - Simplified version since API key is now managed by backend
+ * This context is kept for backwards compatibility with existing components
+ * but no longer manages OpenAI API keys
+ */
 export function ApiKeyProvider({ children }) {
-  const [apiKey, setApiKey] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Check for API key in environment variables first
-    const envKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
-
-    if (envKey) {
-      setApiKey(envKey);
-      setLoading(false);
-    } else {
-      // Check localStorage for user-provided key
-      const storedKey = localStorage.getItem('openai_api_key');
-      if (storedKey) {
-        setApiKey(storedKey);
-      }
-      setLoading(false);
-    }
-  }, []);
-
-  const setUserApiKey = (key) => {
-    setApiKey(key);
-    if (key) {
-      localStorage.setItem('openai_api_key', key);
-    } else {
-      localStorage.removeItem('openai_api_key');
-    }
-  };
-
-  const clearApiKey = () => {
-    setApiKey(null);
-    localStorage.removeItem('openai_api_key');
+  // Provide dummy values for backwards compatibility
+  // API key is now handled by the backend via environment variables
+  const contextValue = {
+    apiKey: 'backend-managed', // Dummy value to prevent null checks from failing
+    setUserApiKey: () => {}, // No-op
+    clearApiKey: () => {}, // No-op
+    loading: false, // Always loaded since no key management needed
   };
 
   return (
-    <ApiKeyContext.Provider value={{ apiKey, setUserApiKey, clearApiKey, loading }}>
+    <ApiKeyContext.Provider value={contextValue}>
       {children}
     </ApiKeyContext.Provider>
   );

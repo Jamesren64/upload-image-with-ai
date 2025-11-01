@@ -158,7 +158,7 @@ function HomeContent() {
                 </Typography>
               </Box>
               <Typography variant="body1" color="textSecondary" sx={{ maxWidth: 500 }}>
-                Upload an image to extract text, translate it, and create beautiful flashcards for language learning.
+                Upload an image with non-english text to extract text, translate it, and create beautiful flashcards for language learning.
               </Typography>
             </Stack>
           </Box>

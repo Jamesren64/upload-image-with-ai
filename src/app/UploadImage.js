@@ -19,7 +19,20 @@ export default function UploadImage({
   translatedText,
   isLoading,
 }) {
+  console.log('[UploadImage] Component rendered, images.length:', images.length, 'isLoading:', isLoading);
+
   const onChange = (imageList) => {
+    console.log('[UploadImage] onChange triggered');
+    console.log('[UploadImage] imageList:', imageList);
+    console.log('[UploadImage] imageList length:', imageList.length);
+    if (imageList.length > 0) {
+      console.log('[UploadImage] First image:', {
+        fileName: imageList[0].file?.name,
+        fileSize: imageList[0].file?.size,
+        fileType: imageList[0].file?.type,
+        hasDataUrl: !!imageList[0].data_url
+      });
+    }
     setImages(imageList);
   };
 
@@ -47,6 +60,11 @@ export default function UploadImage({
         isDragging,
         dragProps,
       }) => {
+        console.log('[UploadImage] Render function called');
+        console.log('[UploadImage] onImageUpload type:', typeof onImageUpload);
+        console.log('[UploadImage] onImageUpload value:', onImageUpload);
+        console.log('[UploadImage] isDragging:', isDragging);
+
         return (
         <Stack
           alignItems={'center'}
@@ -100,19 +118,24 @@ export default function UploadImage({
               )}
 
               {images.length === 0 ? (
-                <Stack alignItems="center" gap={2} p={3} {...dragProps}>
-                  <CloudUploadIcon sx={{ fontSize: 64, color: isDragging ? 'primary.main' : 'action.disabled' }} />
-                  <Typography variant="h6" color={isDragging ? 'primary' : 'text.secondary'}>
-                    {isDragging ? 'Drop your image here' : 'Upload an Image'}
-                  </Typography>
-                  <Typography variant="body2" color="text.disabled" textAlign="center">
-                    Drag and drop an image here, or click to browse
-                  </Typography>
+                <Stack alignItems="center" gap={2} p={3}>
+                  <Box {...dragProps} sx={{ textAlign: 'center', width: '100%' }}>
+                    <CloudUploadIcon sx={{ fontSize: 64, color: isDragging ? 'primary.main' : 'action.disabled' }} />
+                    <Typography variant="h6" color={isDragging ? 'primary' : 'text.secondary'}>
+                      {isDragging ? 'Drop your image here' : 'Upload an Image'}
+                    </Typography>
+                    <Typography variant="body2" color="text.disabled" textAlign="center">
+                      Drag and drop an image here, or click to browse
+                    </Typography>
+                  </Box>
                   <Button
                     variant="outlined"
                     color="primary"
                     startIcon={<ImageIcon />}
                     onClick={(e) => {
+                      console.log('[UploadImage] Browse Files button clicked');
+                      console.log('[UploadImage] isLoading:', isLoading);
+                      console.log('[UploadImage] onImageUpload function:', typeof onImageUpload);
                       e.stopPropagation();
                       onImageUpload();
                     }}
